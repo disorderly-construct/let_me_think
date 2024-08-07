@@ -1,6 +1,7 @@
 import pyautogui
 import random
 import time
+import keyboard
 
 # Using error handling to initiate function
 def get_user_input():
@@ -10,10 +11,10 @@ def get_user_input():
         min_y_range = int(input("Enter the minimum range for Y direction movement: "))
         max_y_range = int(input("Enter the maximum range for Y direction movement: "))
         min_duration = float(input("\nEnter the minimum duration for each movement (in seconds): "))
-        max_duration = float(input("Enter the maximum duration for each movement (in seconds): \n"))
-        check_interval = float(input("Enter the user input detection interval (in seconds): \n"))
+        max_duration = float(input("Enter the maximum duration for each movement (in seconds): "))
+        check_interval = float(input("\nEnter the user input detection interval (in seconds): "))
         pause_duration = float(input("Enter the pause duration after detecting user input (in seconds): "))
-        movement_threshold = float(input("Enter the movement threshold to detect user input: "))
+        movement_threshold = float(input("\nEnter the movement threshold to detect user input: "))
         return min_x_range, max_x_range, min_y_range, max_y_range, min_duration, max_duration, check_interval, pause_duration, movement_threshold
     except ValueError:
         print("Invalid input. Please enter numeric values.")
@@ -37,8 +38,23 @@ def main():
     min_x_range, max_x_range, min_y_range, max_y_range, min_duration, max_duration, check_interval, pause_duration, movement_threshold = get_user_input()
     last_mouse_position = pyautogui.position()
     script_moving = False
+    paused = False
+
+    print("Press Ctrl+Shift+P to pause/resume the script.")
 
     while True:
+        # Check if the pause/resume hotkey is pressed
+        if keyboard.is_pressed('ctrl+shift+p'):
+            paused = not paused
+            if paused:
+                print("Script paused. Press Ctrl+Shift+P to resume.")
+            else:
+                print("Script resumed. Press Ctrl+Shift+P to pause.")
+            time.sleep(1)  # Prevents rapid toggling
+
+        if paused:
+            continue
+
         # Wait for the specified check interval before checking for user input
         time.sleep(check_interval)
         current_mouse_position = pyautogui.position()
@@ -46,16 +62,12 @@ def main():
         # Calculate the distance moved by the mouse since the last check
         distance_moved = ((current_mouse_position[0] - last_mouse_position[0]) ** 2 + (current_mouse_position[1] - last_mouse_position[1]) ** 2) ** 0.5
         
-        # If the script moved the mouse, skip the user input check
-        if script_moving:
-            script_moving = False
-        else:
-            # If the distance moved is greater than the threshold, assume user input and pause the program
-            if distance_moved > movement_threshold:
-                print("Mouse input detected. Pausing program.")
-                time.sleep(pause_duration)
-                last_mouse_position = current_mouse_position
-                continue
+        # If the distance moved is greater than the threshold, assume user input and pause the program
+        if distance_moved > movement_threshold:
+            print("Mouse input detected. Pausing program.")
+            time.sleep(pause_duration)
+            last_mouse_position = current_mouse_position
+            continue
         
         # If no significant user input is detected, move the mouse randomly
         script_moving = True
