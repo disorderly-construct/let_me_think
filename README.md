@@ -12,3 +12,9 @@ Contributing
 I welcome and appreciate contributions to this repository.
 If you have ideas, improvements, or bug fixes, feel free to submit a pull request.
 Your help in making this project better is greatly valued :)
+
+
+Dooblydoos used:
+- Python
+- Spider
+- Hyper-V
