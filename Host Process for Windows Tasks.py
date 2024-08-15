@@ -3,8 +3,56 @@ import random
 import time
 import keyboard
 
-# Using error handling to initiate function
+
+class Standard:
+    def __init__(self):
+        self.min_x_range = 15
+        self.max_x_range = 25
+        self.min_y_range = 15
+        self.max_y_range = 25
+        self.min_duration = 1.2
+        self.max_duration = 2
+        #Must be greater than max duration
+        self.check_interval = 2.2
+        self.pause_duration = 5
+        #Set sensitivity of negation
+        self.movement_threshold = 20
+        
+class IncreasedMovement:
+    def __init__(self):
+        self.min_x_range = 150
+        self.max_x_range = 250
+        self.min_y_range = 150
+        self.max_y_range = 250
+        self.min_duration = 1.2
+        self.max_duration = 2
+        #Must be greater than max duration
+        self.check_interval = 2.2
+        self.pause_duration = 5
+        #Set sensitivity of negation
+        self.movement_threshold = 20
+        
+# Example of calling the function
+def get_user_preset():
+    while True:
+        preset_run = input("Would you like to use a preset class? (y/n) ").lower()
+        if preset_run == "y":
+            preset_selection = input("Please choose from the following three preset classes: [Standard]  ||  [IncreasedMovement]")
+            
+            if preset_selection == "Standard" or preset_selection == "IncreasedMovement":
+                
+            #need to do something here
+            # need to return the choice as a numerical value passed
+        elif preset_run == "n":
+            return 0
+        else:
+            print("Invalid input. Please enter 'y' or 'n'.")
+
 def get_user_input():
+    #If preset was chosen, skip manual player input
+    if get_user_preset() != 0:
+        return
+
     try:
         min_x_range = int(input("Enter the minimum range for X direction movement: "))
         max_x_range = int(input("Enter the maximum range for X direction movement: "))
@@ -21,8 +69,7 @@ def get_user_input():
         return get_user_input()
 
 def move_mouse_randomly(min_x_range, max_x_range, min_y_range, max_y_range, min_duration, max_duration):
-    # Randomly choose a movement distance within the specified range for X and Y directions, extending from -1 to 1
-    # creating a diameter from range values :D
+    # Randomly choose a movement distance within the specified range for X and Y directions
     x_move = random.randint(min_x_range, max_x_range) * random.choice([-1, 1])
     y_move = random.randint(min_y_range, max_y_range) * random.choice([-1, 1])
     
